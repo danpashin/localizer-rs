@@ -3,6 +3,8 @@
 #import <UIKit/UIKit.h>
 #import <substrate.h>
 
+%config(generator=internal);
+
 #ifdef __cplusplus
 extern "C" {
 #endif

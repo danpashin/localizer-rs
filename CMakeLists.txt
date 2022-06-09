@@ -47,7 +47,6 @@ add_custom_command(
 add_library(Localizer SHARED localizer.m)
 target_link_libraries(Localizer PUBLIC
     localizer-rs
-    substrate
     "-framework CoreFoundation"
     "-framework Foundation"
     "-framework Security"
