@@ -28,7 +28,7 @@ lazy_static! {
 }
 
 #[no_mangle]
-unsafe extern "C" fn init_localizer(to_localize_file_path: *const c_char) {
+pub unsafe extern "C" fn init_localizer(to_localize_file_path: *const c_char) {
     OsLogger::new("ru.danpashin.localizer-rs")
         .level_filter(log::LevelFilter::Trace)
         .init()
@@ -46,7 +46,7 @@ unsafe extern "C" fn init_localizer(to_localize_file_path: *const c_char) {
 }
 
 #[no_mangle]
-unsafe extern "C" fn translation_file_name_for_address(address: uintptr_t) -> *const c_char {
+pub unsafe extern "C" fn translation_file_name_for_address(address: uintptr_t) -> *const c_char {
     let images = IMAGES_TO_TRANSLATE.read().expect("Can't lock for writing");
     let file_name = EXECUTABLE_RANGES
         .read()
@@ -76,6 +76,8 @@ fn init(file_to_parse: PathBuf) -> Result<()> {
             let resource_name = components.1.to_string();
             log::debug!("add uuid={:?}; resource_name={:?}", uuid, resource_name);
             images.insert(uuid, resource_name);
+        } else {
+            log::warn!("Invalid line in file! {}", line);
         }
     }
 

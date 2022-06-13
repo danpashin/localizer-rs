@@ -2,19 +2,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <substrate.h>
+#import "localizer.h"
 
-%config(generator=internal);
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-void init_localizer(const char *to_localize_file_path);
-const char *translation_file_name_for_address(uintptr_t address);
-
-#ifdef __cplusplus
-}
-#endif
 
 __attribute__((always_inline)) static inline uintptr_t return_address() {
     return (uintptr_t)__builtin_extract_return_addr(__builtin_return_address(0));
