@@ -1,3 +1,5 @@
+#![allow(clippy::missing_safety_doc)]
+
 #[macro_use]
 extern crate lazy_static;
 
@@ -9,9 +11,9 @@ use anyhow::Result;
 use executable_range::Range;
 use mach_o_sys::dyld::uintptr_t;
 use oslog::OsLogger;
-use std::ffi::CStr;
 use std::{
     collections::HashMap,
+    ffi::CStr,
     fs::File,
     io::{BufRead, BufReader},
     os::raw::c_char,
@@ -41,8 +43,6 @@ pub unsafe extern "C" fn init_localizer(to_localize_file_path: *const c_char) {
     if let Err(error) = init(path) {
         log::error!("{:?}", error);
     }
-
-    log::debug!("End initing!");
 }
 
 #[no_mangle]
@@ -54,11 +54,6 @@ pub unsafe extern "C" fn translation_file_name_for_address(address: uintptr_t) -
         .iter()
         .find(|(_, range)| range.contains_address(address))
         .and_then(|(uuid, _)| images.get(uuid));
-    log::debug!(
-        "Result of finding resource for {} is {:?}",
-        address,
-        file_name
-    );
 
     match file_name {
         Some(file_name) => file_name.as_ptr() as *const c_char,
@@ -71,10 +66,9 @@ fn init(file_to_parse: PathBuf) -> Result<()> {
 
     let mut images = IMAGES_TO_TRANSLATE.write().expect("Can't lock for writing");
     for line in reader.lines().flatten() {
-        if let Some(components) = line.split_once(':') {
-            let uuid = Uuid::parse_str(components.0)?;
-            let resource_name = components.1.to_string();
-            log::debug!("add uuid={:?}; resource_name={:?}", uuid, resource_name);
+        if let Some((uuid, resource_name)) = line.split_once(':') {
+            let uuid = Uuid::parse_str(uuid)?;
+            let resource_name = resource_name.to_string();
             images.insert(uuid, resource_name);
         } else {
             log::warn!("Invalid line in file! {}", line);

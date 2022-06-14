@@ -17,5 +17,4 @@ uuid = { version = "1.1", features = ["v4"] }
 mach_o_sys = "0.1"
 lazy_static = "1.4"
 log = { version = "0.4", default-features = false, features = ["max_level_trace", "release_max_level_trace"] }
-#env_logger = { version = "0.9", default-features = false, features = ["humantime"] }
 oslog = "0.2.0"
